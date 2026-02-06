@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0B1220" />
+    <title>Sleep Analysis & Prediction System</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+
+    <script>
+      (function () {
+        try {
+          const saved = localStorage.getItem('theme');
+          const theme = saved || 'dark';
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="container nav__inner">
+        <div class="nav__brand">
+          <div class="nav__title">Sleep Analysis &amp; Prediction System</div>
+          <div class="nav__subtitle">AI-powered sleep health insights</div>
+        </div>
+
+        <div class="nav__right">
+          <a class="nav__link" href="#analysis">Analysis</a>
+          <a class="nav__link" href="#insights">Insights</a>
+          <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+            <span class="theme-toggle__icon" id="themeIcon"></span>
+            <span class="theme-toggle__label" id="themeLabel">Dark</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="bg-orb orb-1"></div>
+      <div class="bg-orb orb-2"></div>
+      <div class="bg-orb orb-3"></div>
+
+      <section class="container hero">
+        <div class="hero__card">
+          <div class="hero__grid">
+            <div class="hero__left">
+              <div class="pill">
+                AI-powered sleep health insights
+                <span class="pill__dot"></span>
+              </div>
+
+              <h1 class="hero__title">Predict Your Sleep Quality Using AI</h1>
+              <p class="hero__desc">
+                Enter your lifestyle habits and get predicted sleep hours, a sleep category, and a
+                recommendation placeholder—ready to connect with your ML model.
+              </p>
+
+              <div class="hero__cta">
+                <a class="btn btn--primary" href="#analysis">Start Analysis</a>
+                <a class="btn btn--ghost" href="#insights">View Dashboard</a>
+              </div>
+
+              <div class="features">
+                <div class="feature-card">
+                  <div class="feature-card__title">AI-powered predictions</div>
+                  <div class="feature-card__desc">Predict sleep duration and quality from daily habits.</div>
+                </div>
+                <div class="feature-card">
+                  <div class="feature-card__title">Lifestyle analysis</div>
+                  <div class="feature-card__desc">Understand how screen time and activity relate to rest.</div>
+                </div>
+                <div class="feature-card">
+                  <div class="feature-card__title">Visual insights</div>
+                  <div class="feature-card__desc">Clean dashboard containers ready for charts.</div>
+                </div>
+                <div class="feature-card">
+                  <div class="feature-card__title">Recommendations</div>
+                  <div class="feature-card__desc">A place for actionable guidance after prediction.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero__right">
+              <div class="glass-card">
+                <div class="glass-card__head">
+                  <div>
+                    <div class="glass-card__label">Sleep snapshot</div>
+                    <div class="glass-card__title">Your lifestyle → Your sleep</div>
+                    <div class="glass-card__desc">
+                      Illustration placeholder for sleep, health, or analytics visuals.
+                    </div>
+                  </div>
+                  <div class="avatar"></div>
+                </div>
+
+                <div class="glass-card__stack">
+                  <div class="mini-card">
+                    <div class="mini-card__row">
+                      <div class="mini-card__title">Prediction</div>
+                      <div class="progress"><div class="progress__bar"></div></div>
+                    </div>
+                    <div class="mini-card__desc">
+                      Run analysis to populate predicted sleep hours and category.
+                    </div>
+                  </div>
+
+                  <div class="mini-card">
+                    <div class="mini-card__row">
+                      <div class="mini-card__title">Insights</div>
+                      <div class="mini-card__badge">Charts ready</div>
+                    </div>
+                    <div class="mini-card__desc">
+                      Dedicated spaces for comparisons, trends, and distributions.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="analysis" class="container section">
+        <div class="grid">
+          <div class="col col--form">
+            <div class="glass-card card-pad">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">Lifestyle Inputs</div>
+                  <div class="card-subtitle">Fill in your daily habits to predict sleep health.</div>
+                </div>
+                <div class="icon-chip">✦</div>
+              </div>
+
+              <form id="predictForm" class="form">
+                <div class="field">
+                  <div class="field__icon">📱</div>
+                  <div class="field__body">
+                    <input class="field__input" type="number" step="0.1" min="0" max="24" name="social_media_hours" placeholder="Social Media Hours" required />
+                    <label class="field__label">Social Media Hours</label>
+                    <div class="field__hint">Range: 0–24</div>
+                    <div class="field__error"></div>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <div class="field__icon">🎮</div>
+                  <div class="field__body">
+                    <input class="field__input" type="number" step="0.1" min="0" max="24" name="gaming_hours" placeholder="Gaming Hours" required />
+                    <label class="field__label">Gaming Hours</label>
+                    <div class="field__hint">Range: 0–24</div>
+                    <div class="field__error"></div>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <div class="field__icon">💼</div>
+                  <div class="field__body">
+                    <input class="field__input" type="number" step="0.1" min="0" max="24" name="online_work_hours" placeholder="Online Work Hours" required />
+                    <label class="field__label">Online Work Hours</label>
+                    <div class="field__hint">Range: 0–24</div>
+                    <div class="field__error"></div>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <div class="field__icon">🏃</div>
+                  <div class="field__body">
+                    <input class="field__input" type="number" step="0.1" min="0" max="24" name="physical_activity_hours" placeholder="Physical Activity Hours" required />
+                    <label class="field__label">Physical Activity Hours</label>
+                    <div class="field__hint">Range: 0–24</div>
+                    <div class="field__error"></div>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <div class="field__icon">#</div>
+                  <div class="field__body">
+                    <input class="field__input" type="number" step="1" min="1" max="120" name="age" placeholder="Age" required />
+                    <label class="field__label">Age</label>
+                    <div class="field__hint">Range: 1–120</div>
+                    <div class="field__error"></div>
+                  </div>
+                </div>
+
+                <details class="advanced">
+                  <summary class="advanced__summary">Advanced inputs (optional)</summary>
+                  <div class="advanced__grid">
+                    <div class="field">
+                      <div class="field__icon">☕</div>
+                      <div class="field__body">
+                        <input class="field__input" type="number" step="0.1" min="0" max="20" name="caffeine_intake" placeholder="Caffeine Intake" />
+                        <label class="field__label">Caffeine Intake</label>
+                        <div class="field__hint">Optional. Default used if empty.</div>
+                        <div class="field__error"></div>
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <div class="field__icon">🌙</div>
+                      <div class="field__body">
+                        <input class="field__input" type="number" step="0.1" min="0" max="10" name="screen_time_before_bed" placeholder="Screen Time Before Bed" />
+                        <label class="field__label">Screen Time Before Bed</label>
+                        <div class="field__hint">Optional. Default used if empty.</div>
+                        <div class="field__error"></div>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+
+                <div class="api-error" id="apiError" hidden></div>
+
+                <button class="btn btn--primary btn--block" id="predictBtn" type="submit">
+                  <span class="spinner" id="spinner" hidden></span>
+                  <span id="predictBtnText">Predict My Sleep</span>
+                </button>
+
+                <div class="payload">
+                  <div class="payload__title">API payload</div>
+                  <div class="payload__desc">
+                    social_media_hours, gaming_hours, online_work_hours, physical_activity_hours, age (+ optional caffeine_intake, screen_time_before_bed)
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="col col--results">
+            <div class="results" id="results" hidden>
+              <div class="result-card" id="hoursCard">
+                <div class="result-card__head">
+                  <div>
+                    <div class="result-card__title">Predicted Sleep Hours</div>
+                    <div class="result-card__subtitle">Estimated sleep duration</div>
+                  </div>
+                </div>
+                <div class="result-card__value" id="predHours">—</div>
+              </div>
+
+              <div class="result-card" id="categoryCard">
+                <div class="result-card__head">
+                  <div>
+                    <div class="result-card__title">Sleep Category</div>
+                    <div class="result-card__subtitle">Predicted sleep quality</div>
+                  </div>
+                  <div class="pill-cat" id="catPill">—</div>
+                </div>
+                <div class="result-card__value" id="predCategory">—</div>
+              </div>
+
+              <div class="result-card result-card--full" id="recCard">
+                <div class="result-card__head">
+                  <div>
+                    <div class="result-card__title">Recommendation</div>
+                    <div class="result-card__subtitle">Personalized guidance</div>
+                  </div>
+                </div>
+                <div class="result-card__text" id="predRec">—</div>
+              </div>
+
+              <div class="result-card" id="statusCard">
+                <div class="result-card__head">
+                  <div>
+                    <div class="result-card__title">Status</div>
+                    <div class="result-card__subtitle">Flask + ML integration</div>
+                  </div>
+                </div>
+                <div class="result-card__text">
+                  UI is connected to <span class="mono">POST /api/predict</span>.
+                </div>
+              </div>
+            </div>
+
+            <div class="results" id="resultsEmpty">
+              <div class="glass-card card-pad">
+                <div class="card-title">Results</div>
+                <div class="card-subtitle">
+                  Run a prediction to reveal your sleep hours, category, and recommendation.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="insights" class="container section">
+        <div class="glass-card card-pad">
+          <div class="section-head">
+            <div>
+              <div class="card-title">Analytics Visualization</div>
+              <div class="card-subtitle">Chart containers ready for Chart.js or Recharts.</div>
+            </div>
+            <div class="badge">Placeholders</div>
+          </div>
+
+          <div class="charts">
+            <div class="chart">
+              <div class="chart__head">
+                <div>
+                  <div class="chart__title">Sleep vs Screen Time</div>
+                  <div class="chart__subtitle">Bar chart placeholder</div>
+                </div>
+                <div class="dot"></div>
+              </div>
+              <div class="chart__box">
+                <canvas id="chartScreenSleep" aria-label="Sleep vs screen time chart"></canvas>
+              </div>
+              <div class="legend">
+                <div class="legend__title">Legend</div>
+                <div class="legend__desc">Social media + gaming + work vs sleep</div>
+              </div>
+            </div>
+
+            <div class="chart">
+              <div class="chart__head">
+                <div>
+                  <div class="chart__title">Sleep Trend</div>
+                  <div class="chart__subtitle">Line chart placeholder</div>
+                </div>
+                <div class="dot"></div>
+              </div>
+              <div class="chart__box">
+                <canvas id="chartTrend" aria-label="Sleep trend over time"></canvas>
+              </div>
+              <div class="legend">
+                <div class="legend__title">Legend</div>
+                <div class="legend__desc">Time-series sleep pattern</div>
+              </div>
+            </div>
+
+            <div class="chart">
+              <div class="chart__head">
+                <div>
+                  <div class="chart__title">Sleep Category Distribution</div>
+                  <div class="chart__subtitle">Pie chart placeholder</div>
+                </div>
+                <div class="dot"></div>
+              </div>
+              <div class="chart__box">
+                <canvas id="chartCategory" aria-label="Sleep category distribution"></canvas>
+              </div>
+              <div class="legend">
+                <div class="legend__title">Legend</div>
+                <div class="legend__desc">Poor / Normal / Good</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container section">
+        <div class="glass-card card-pad">
+          <div class="section-head">
+            <div>
+              <div class="card-title">Prediction History</div>
+              <div class="card-subtitle">Recent predictions appear here for quick comparison.</div>
+            </div>
+            <div class="badge"><span id="historyCount">0</span> entries</div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table" aria-label="Prediction history">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Inputs summary</th>
+                  <th>Predicted hours</th>
+                  <th>Sleep category</th>
+                </tr>
+              </thead>
+              <tbody id="historyBody">
+                <tr>
+                  <td colspan="4" class="table__empty">No predictions yet. Run an analysis to populate this table.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <div class="footer__title">Sleep Analysis &amp; Prediction System</div>
+        <div class="footer__meta">Author: Bushra Saleem</div>
+        <div class="footer__meta">Year: <span id="year"></span></div>
+      </div>
+    </footer>
+
+    <script>
+      window.__DEFAULT_CAFFEINE__ = Number("{{ default_caffeine }}");
+      window.__DEFAULT_SCREEN_BEFORE_BED__ = Number("{{ default_screen_before_bed }}");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </body>
+</html>
