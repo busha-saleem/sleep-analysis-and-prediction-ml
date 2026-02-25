@@ -9,8 +9,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 
+# ✅ Create Flask app
 app = Flask(__name__, static_folder='static', template_folder='templates')
-
 
 FEATURES = [
     'social_media_hours',
@@ -25,7 +25,6 @@ FEATURES = [
     'caffeine_effect',
 ]
 
-
 @dataclass
 class ModelBundle:
     lr: LinearRegression
@@ -33,9 +32,7 @@ class ModelBundle:
     knn: KNeighborsClassifier
     defaults: dict
 
-
 _BUNDLE: ModelBundle | None = None
-
 
 def _categorize_sleep(hours: float) -> int:
     if hours < 6:
@@ -44,10 +41,8 @@ def _categorize_sleep(hours: float) -> int:
         return 1
     return 2
 
-
 def _num_to_label(num: int) -> str:
     return {0: 'Poor Sleep', 1: 'Normal Sleep', 2: 'Good Sleep'}.get(int(num), 'Normal Sleep')
-
 
 def _recommendation_for(label: str) -> str:
     if label == 'Poor Sleep':
@@ -56,11 +51,9 @@ def _recommendation_for(label: str) -> str:
         return 'Great job—keep your routine consistent and maintain a balanced mix of activity and screen time.'
     return 'Aim for consistent bed/wake times and moderate screen time before sleep for better recovery.'
 
-
-# ✅ FIXED: correct dataset path for deployment
+# ✅ Use relative path for dataset (PythonAnywhere safe)
 def _get_dataset_path() -> str:
     return os.path.join(os.path.dirname(__file__), 'sleep_dataset.csv')
-
 
 def _train_models() -> ModelBundle:
     df = pd.read_csv(_get_dataset_path())
@@ -100,20 +93,17 @@ def _train_models() -> ModelBundle:
 
     return ModelBundle(lr=lr, scaler=scaler, knn=knn, defaults=defaults)
 
-
 def get_bundle() -> ModelBundle:
     global _BUNDLE
     if _BUNDLE is None:
         _BUNDLE = _train_models()
     return _BUNDLE
 
-
 def _as_float(value, field: str) -> float:
     try:
         return float(value)
     except Exception as e:
         raise ValueError(f'Invalid value for {field}') from e
-
 
 @app.get('/')
 def index():
@@ -124,11 +114,9 @@ def index():
         default_screen_before_bed=bundle.defaults['screen_time_before_bed'],
     )
 
-
 @app.post('/api/predict')
 def predict():
     bundle = get_bundle()
-
     data = request.get_json(silent=True) or {}
 
     required = [
@@ -174,10 +162,8 @@ def predict():
     X_in = pd.DataFrame([row], columns=FEATURES)
 
     pred_hours = float(bundle.lr.predict(X_in)[0])
-
     X_scaled = bundle.scaler.transform(X_in)
     pred_cat_num = int(bundle.knn.predict(X_scaled)[0])
-
     sleep_category = _num_to_label(pred_cat_num)
 
     return jsonify(
@@ -188,7 +174,10 @@ def predict():
         }
     )
 
+# ✅ Deployment-safe entry point for PythonAnywhere
+# Expose WSGI application object
+application = app  # PythonAnywhere expects 'application'
 
-# ✅ DEPLOYMENT-SAFE ENTRY POINT
 if __name__ == '__main__':
+    # Local testing
     app.run(debug=True)
