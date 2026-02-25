@@ -57,15 +57,19 @@ def _recommendation_for(label: str) -> str:
     return 'Aim for consistent bed/wake times and moderate screen time before sleep for better recovery.'
 
 
+# ✅ FIXED: correct dataset path for deployment
 def _get_dataset_path() -> str:
-    base = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    return os.path.join(base, 'sleep_dataset.csv')
+    return os.path.join(os.path.dirname(__file__), 'sleep_dataset.csv')
 
 
 def _train_models() -> ModelBundle:
     df = pd.read_csv(_get_dataset_path())
 
-    df['total_screen_time'] = df['social_media_hours'] + df['gaming_hours'] + df['online_work_hours']
+    df['total_screen_time'] = (
+        df['social_media_hours'] +
+        df['gaming_hours'] +
+        df['online_work_hours']
+    )
     df['activity_ratio'] = df['physical_activity_hours'] / (df['total_screen_time'] + 0.1)
     df['caffeine_effect'] = df['caffeine_intake'] * df['screen_time_before_bed']
 
@@ -73,7 +77,9 @@ def _train_models() -> ModelBundle:
     y_reg = df['sleep_hours']
     y_clf = df['sleep_hours'].apply(_categorize_sleep)
 
-    X_train, _, y_train_reg, _ = train_test_split(X, y_reg, test_size=0.3, random_state=42)
+    X_train, _, y_train_reg, _ = train_test_split(
+        X, y_reg, test_size=0.3, random_state=42
+    )
     X_train_c, _, y_train_clf, _ = train_test_split(
         X, y_clf, test_size=0.3, random_state=42, stratify=y_clf
     )
@@ -183,5 +189,6 @@ def predict():
     )
 
 
+# ✅ DEPLOYMENT-SAFE ENTRY POINT
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    app.run(debug=True)
